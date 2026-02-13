@@ -6,10 +6,14 @@ export default function RootLayout({ children }) {
     <html lang="zh-Hant">
       <body>
         <main>
-          <h1>API Collections</h1>
-          <nav style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
-            <Link href="/">API 列表</Link>
-            <Link href="/dashboard">Dashboard</Link>
+          <header className="panel page-header">
+            <h1 className="page-title">API Collections</h1>
+            <p className="page-subtitle">Neumorphic 介面 · 政府 API 探索</p>
+          </header>
+
+          <nav className="top-nav">
+            <Link className="nav-link" href="/">API 列表</Link>
+            <Link className="nav-link" href="/dashboard">Dashboard</Link>
           </nav>
           {children}
         </main>
