@@ -9,7 +9,12 @@
     "baseUrl": "https://opendata.cwa.gov.tw/api/v1/rest/datastore",
     "docsUrl": "https://opendata.cwa.gov.tw/devManual/insrtuction",
     "category": "weather",
-    "tags": ["weather", "forecast", "taiwan", "government"],
+    "tags": [
+      "weather",
+      "forecast",
+      "taiwan",
+      "government"
+    ],
     "status": "active",
     "rateLimit": {
       "policy": "Depends on issued key tier; public keys are rate-limited by CWA.",
@@ -50,7 +55,12 @@
         }
       }
     ],
-    "visualizationHints": ["line", "bar", "card", "table"]
+    "visualizationHints": [
+      "line",
+      "bar",
+      "card",
+      "table"
+    ]
   },
   {
     "id": "tw-motc-tdx",
@@ -62,7 +72,13 @@
     "baseUrl": "https://tdx.transportdata.tw/api/basic",
     "docsUrl": "https://tdx.transportdata.tw/api-service/swagger",
     "category": "transport",
-    "tags": ["bus", "rail", "traffic", "taiwan", "government"],
+    "tags": [
+      "bus",
+      "rail",
+      "traffic",
+      "taiwan",
+      "government"
+    ],
     "status": "active",
     "rateLimit": {
       "policy": "Per-application quota enforced by TDX platform.",
@@ -93,14 +109,23 @@
         "statusCode": 200,
         "body": [
           {
-            "RouteName": { "Zh_tw": "262" },
-            "StopName": { "Zh_tw": "捷運科技大樓站" },
+            "RouteName": {
+              "Zh_tw": "262"
+            },
+            "StopName": {
+              "Zh_tw": "捷運科技大樓站"
+            },
             "EstimateTime": 180
           }
         ]
       }
     ],
-    "visualizationHints": ["map", "line", "table", "card"]
+    "visualizationHints": [
+      "map",
+      "line",
+      "table",
+      "card"
+    ]
   },
   {
     "id": "us-noaa-nws",
@@ -112,7 +137,12 @@
     "baseUrl": "https://api.weather.gov",
     "docsUrl": "https://www.weather.gov/documentation/services-web-api",
     "category": "weather",
-    "tags": ["weather", "alerts", "united-states", "government"],
+    "tags": [
+      "weather",
+      "alerts",
+      "united-states",
+      "government"
+    ],
     "status": "active",
     "rateLimit": {
       "policy": "No fixed published request cap; service may throttle excessive traffic.",
@@ -145,7 +175,12 @@
         }
       }
     ],
-    "visualizationHints": ["map", "line", "card", "table"]
+    "visualizationHints": [
+      "map",
+      "line",
+      "card",
+      "table"
+    ]
   },
   {
     "id": "us-census-data",
@@ -157,7 +192,12 @@
     "baseUrl": "https://api.census.gov/data",
     "docsUrl": "https://www.census.gov/data/developers/guidance/api-user-guide.html",
     "category": "demographics",
-    "tags": ["population", "economy", "united-states", "government"],
+    "tags": [
+      "population",
+      "economy",
+      "united-states",
+      "government"
+    ],
     "status": "active",
     "rateLimit": {
       "policy": "Without key: up to 500 requests per IP per day; with key: higher limits.",
@@ -186,11 +226,319 @@
         "description": "State population query",
         "statusCode": 200,
         "body": [
-          ["NAME", "B01001_001E", "state"],
-          ["Alabama", "5028092", "01"]
+          [
+            "NAME",
+            "B01001_001E",
+            "state"
+          ],
+          [
+            "Alabama",
+            "5028092",
+            "01"
+          ]
         ]
       }
     ],
-    "visualizationHints": ["bar", "line", "map", "table", "card"]
+    "visualizationHints": [
+      "bar",
+      "line",
+      "map",
+      "table",
+      "card"
+    ]
+  },
+  {
+    "id": "tw-data-gov-openapi",
+    "name": "Taiwan Government Open Data Platform API",
+    "country": "Taiwan",
+    "organization": "National Development Council",
+    "pricing": "free",
+    "authType": "None (dataset dependent)",
+    "baseUrl": "https://data.gov.tw/api/v1/rest/datastore",
+    "docsUrl": "https://data.gov.tw/",
+    "category": "open-data-catalog",
+    "tags": [
+      "open-data",
+      "catalog",
+      "taiwan",
+      "government"
+    ],
+    "status": "active",
+    "rateLimit": {
+      "policy": "No universal quota; limits and throttling vary by dataset provider.",
+      "notes": "Check each dataset page for service stability and usage terms."
+    },
+    "license": {
+      "name": "Government Open Data License, Taiwan",
+      "url": "https://data.gov.tw/license",
+      "notes": "Reuse is generally allowed with attribution unless dataset-specific terms override."
+    },
+    "requestTemplates": [
+      {
+        "method": "GET",
+        "path": "/A01010000C-001277-053",
+        "query": {
+          "limit": 10,
+          "offset": 0,
+          "format": "JSON"
+        },
+        "header": {},
+        "body": null
+      }
+    ],
+    "exampleResponses": [
+      {
+        "description": "Dataset records query response",
+        "statusCode": 200,
+        "body": {
+          "success": true,
+          "result": {
+            "limit": 10,
+            "offset": 0,
+            "records": []
+          }
+        }
+      }
+    ],
+    "visualizationHints": [
+      "table",
+      "card"
+    ]
+  },
+  {
+    "id": "tw-taipei-open-data",
+    "name": "Taipei City Open Data API",
+    "country": "Taiwan",
+    "organization": "Taipei City Government",
+    "pricing": "free",
+    "authType": "None (dataset dependent)",
+    "baseUrl": "https://data.taipei/api/v1/dataset",
+    "docsUrl": "https://data.taipei/",
+    "category": "city-data",
+    "tags": [
+      "city",
+      "transport",
+      "civic",
+      "taiwan",
+      "government"
+    ],
+    "status": "active",
+    "rateLimit": {
+      "policy": "No globally published cap; endpoint stability depends on dataset and platform load.",
+      "notes": "High-frequency polling should include caching and retry backoff."
+    },
+    "license": {
+      "name": "Government Open Data License, Taiwan",
+      "url": "https://data.gov.tw/license",
+      "notes": "Most datasets allow reuse with attribution; verify per-dataset clauses."
+    },
+    "requestTemplates": [
+      {
+        "method": "GET",
+        "path": "",
+        "query": {
+          "scope": "resourceAquire",
+          "limit": 10
+        },
+        "header": {},
+        "body": null
+      }
+    ],
+    "exampleResponses": [
+      {
+        "description": "Dataset listing response",
+        "statusCode": 200,
+        "body": {
+          "result": {
+            "count": 1,
+            "results": [
+              {
+                "id": "sample-id",
+                "resourceName": "Sample Dataset"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "visualizationHints": [
+      "table",
+      "card",
+      "map"
+    ]
+  },
+  {
+    "id": "us-nasa-openapi",
+    "name": "US NASA Open APIs",
+    "country": "United States",
+    "organization": "National Aeronautics and Space Administration",
+    "pricing": "free",
+    "authType": "API Key (DEMO_KEY available)",
+    "baseUrl": "https://api.nasa.gov",
+    "docsUrl": "https://api.nasa.gov/",
+    "category": "space",
+    "tags": [
+      "space",
+      "astronomy",
+      "earth",
+      "united-states",
+      "government"
+    ],
+    "status": "active",
+    "rateLimit": {
+      "policy": "DEMO_KEY has lower hourly and daily quotas; personal keys have higher limits.",
+      "notes": "Use dedicated API key for production and cache media metadata."
+    },
+    "license": {
+      "name": "U.S. Public Domain (17 U.S.C. § 105)",
+      "url": "https://www.usa.gov/government-works",
+      "notes": "NASA content is mostly public domain; some media includes additional rights notices."
+    },
+    "requestTemplates": [
+      {
+        "method": "GET",
+        "path": "/planetary/apod",
+        "query": {
+          "api_key": "DEMO_KEY"
+        },
+        "header": {},
+        "body": null
+      }
+    ],
+    "exampleResponses": [
+      {
+        "description": "Astronomy Picture of the Day",
+        "statusCode": 200,
+        "body": {
+          "date": "2024-01-01",
+          "title": "Sample APOD",
+          "url": "https://apod.nasa.gov/apod/image/sample.jpg"
+        }
+      }
+    ],
+    "visualizationHints": [
+      "card",
+      "table"
+    ]
+  },
+  {
+    "id": "us-openfda",
+    "name": "US FDA OpenFDA API",
+    "country": "United States",
+    "organization": "U.S. Food and Drug Administration",
+    "pricing": "free",
+    "authType": "API Key (optional, recommended)",
+    "baseUrl": "https://api.fda.gov",
+    "docsUrl": "https://open.fda.gov/apis/",
+    "category": "health",
+    "tags": [
+      "drug",
+      "device",
+      "safety",
+      "united-states",
+      "government"
+    ],
+    "status": "active",
+    "rateLimit": {
+      "policy": "Without API key, stricter per-minute caps apply; key increases quota.",
+      "notes": "Implement backoff on 429 and avoid broad unbounded searches."
+    },
+    "license": {
+      "name": "U.S. Public Domain (17 U.S.C. § 105)",
+      "url": "https://www.usa.gov/government-works",
+      "notes": "Underlying submissions may contain third-party content; review endpoint notes."
+    },
+    "requestTemplates": [
+      {
+        "method": "GET",
+        "path": "/drug/event.json",
+        "query": {
+          "limit": 1
+        },
+        "header": {},
+        "body": null
+      }
+    ],
+    "exampleResponses": [
+      {
+        "description": "Drug adverse event sample",
+        "statusCode": 200,
+        "body": {
+          "meta": {
+            "results": {
+              "total": 1
+            }
+          },
+          "results": [
+            {
+              "safetyreportid": "10000001"
+            }
+          ]
+        }
+      }
+    ],
+    "visualizationHints": [
+      "table",
+      "bar",
+      "card"
+    ]
+  },
+  {
+    "id": "us-cdc-socrata",
+    "name": "US CDC Open Data API (Socrata)",
+    "country": "United States",
+    "organization": "U.S. Centers for Disease Control and Prevention",
+    "pricing": "free",
+    "authType": "None (App Token optional)",
+    "baseUrl": "https://data.cdc.gov/resource",
+    "docsUrl": "https://data.cdc.gov/",
+    "category": "public-health",
+    "tags": [
+      "health",
+      "surveillance",
+      "statistics",
+      "united-states",
+      "government"
+    ],
+    "status": "active",
+    "rateLimit": {
+      "policy": "Anonymous requests are rate limited; app token raises throughput.",
+      "notes": "Use $limit/$select to constrain payload size and improve reliability."
+    },
+    "license": {
+      "name": "U.S. Public Domain (17 U.S.C. § 105)",
+      "url": "https://www.usa.gov/government-works",
+      "notes": "Some linked content may carry separate terms; validate dataset metadata."
+    },
+    "requestTemplates": [
+      {
+        "method": "GET",
+        "path": "/bi63-dtpu.json",
+        "query": {
+          "$limit": 10
+        },
+        "header": {},
+        "body": null
+      }
+    ],
+    "exampleResponses": [
+      {
+        "description": "CDC dataset sample rows",
+        "statusCode": 200,
+        "body": [
+          {
+            "state": "California",
+            "value": "123"
+          }
+        ]
+      }
+    ],
+    "visualizationHints": [
+      "table",
+      "line",
+      "bar",
+      "map",
+      "card"
+    ]
   }
 ]
