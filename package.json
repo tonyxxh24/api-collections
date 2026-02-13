@@ -1,8 +1,14 @@
 {
   "name": "api-collections",
   "private": true,
-  "workspaces": ["apps/*"],
+  "workspaces": [
+    "apps/*"
+  ],
   "scripts": {
-    "test": "npm run test -w apps/api"
+    "dev": "npm run dev --workspace @api-collections/web",
+    "dev:web": "npm run dev --workspace @api-collections/web",
+    "dev:api": "npm run dev --workspace @api-collections/api",
+    "build": "npm run build --workspaces",
+    "lint": "npm run lint --workspaces"
   }
 }
