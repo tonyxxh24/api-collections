@@ -8,7 +8,16 @@
     "dev": "npm run dev --workspace @api-collections/web",
     "dev:web": "npm run dev --workspace @api-collections/web",
     "dev:api": "npm run dev --workspace @api-collections/api",
+    "start:legacy": "node src/server.js",
     "build": "npm run build --workspaces",
-    "lint": "npm run lint --workspaces"
+    "lint": "npm run lint --workspaces && npm run lint:root",
+    "lint:root": "node --check src/server.js && node --check src/apis.js && node --check test/apis.test.js scripts/typecheck.mjs",
+    "typecheck": "npm run typecheck --workspaces && npm run typecheck:root",
+    "typecheck:root": "node scripts/typecheck.mjs",
+    "test": "npm run test --workspaces && npm run test:root",
+    "test:root": "node --test test/apis.test.js",
+    "test:api": "node --test apps/api/test/*.test.js",
+    "check:api": "npm run lint --workspace @api-collections/api && node scripts/typecheck.mjs --scope=api && npm run test:api",
+    "check": "npm run lint && npm run typecheck && npm run test"
   }
 }

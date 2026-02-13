@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "node --watch src/index.js",
     "start": "node src/index.js",
-    "lint": "echo 'No lint configured for api'"
+    "lint": "sh -c 'for f in $(find src test -name \"*.js\" -type f); do node --check \"$f\"; done'",
+    "typecheck": "node ../../scripts/typecheck.mjs --scope=api",
+    "test": "node --test test/*.test.js"
   },
   "dependencies": {
     "cors": "^2.8.5",

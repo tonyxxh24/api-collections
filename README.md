@@ -3,54 +3,96 @@
 Collect free/paid and useful api related to my interests through a modern UI.
 以 monorepo 方式管理前後端的 API 收藏與測試平台。
 
-## 專案結構
+## 專案結構（目前有兩條流程）
 
 ```txt
 .
 ├─ apps/
-│  ├─ web/                      # Next.js 前端
-│  │  ├─ app/
-│  │  │  ├─ page.js             # / API 列表
-│  │  │  ├─ api/[id]/page.js    # /api/[id] API 詳細 + 測試面板
-│  │  │  └─ dashboard/page.js   # /dashboard 視覺化看板
-│  │  └─ components/
-│  └─ api/                      # Express 後端
-│     └─ src/
-│        ├─ index.js            # REST API 入口
-│        └─ providers/          # Provider 介面與實作
-├─ package.json                 # npm workspaces 設定
-└─ README.md
+│  ├─ web/                      # Next.js 前端（新流程）
+│  └─ api/                      # Node/Express API proxy（新流程）
+├─ src/
+│  ├─ server.js                 # legacy API server（讀 data/apis/seed.json）
+│  └─ apis.js
+├─ data/apis/
+│  ├─ schema.json
+│  └─ seed.json
+├─ frontend/                    # 靜態 visualization 元件 demo
+└─ dashboard/                   # 靜態 dashboard demo
 ```
 
-## 啟動方式
+## 先說結論：現在怎麼跑？
 
-### 1) 安裝依賴
+### A) 不安裝 npm 套件也可跑（legacy 路線）
+
+```bash
+npm run start:legacy
+```
+
+啟動後可用：
+
+- `GET http://localhost:3000/apis`
+- 支援 query：`country` / `pricing` / `category` / `q`
+
+這條路線最穩，適合先確認 seed 資料與篩選 API 邏輯。
+
+### B) 完整 Web App 路線（apps/web + apps/api）
+
+先安裝依賴：
 
 ```bash
 npm install
 ```
 
-### 2) 啟動後端
+再開兩個 terminal：
 
 ```bash
 npm run dev:api
-```
-
-預設於 `http://localhost:4000`。
-
-### 3) 啟動前端
-
-```bash
 npm run dev:web
 ```
 
-預設於 `http://localhost:3000`，前端會呼叫 `NEXT_PUBLIC_API_BASE_URL`（預設 `http://localhost:4000`）。
+- Web: `http://localhost:3000`
+- API: `http://localhost:4000`
 
-## 後端 REST 端點
+> 若你在 codex sandbox 內遇到外網限制，`npm install` 可能因 registry 403 失敗，這不是程式碼錯誤，而是環境網路策略限制。
 
-- `GET /apis`：列出所有 provider metadata。
-- `GET /apis/:id`：取得單一 provider metadata。
-- `POST /apis/:id/test`：依 provider 規則組裝請求並代理呼叫目標 API。
+## 品質門檻（Minimum Quality Checks）
+
+### 全專案檢查
+
+```bash
+npm run check
+```
+
+依序包含：
+
+- `npm run lint`
+- `npm run typecheck`
+- `npm run test`
+
+### API-only（在受限環境建議先跑）
+
+```bash
+npm run check:api
+```
+
+依序包含：
+
+- API workspace lint
+- 結構型別檢查（seed 與 metadata）
+- API proxy 測試
+
+## 測試指令
+
+```bash
+# root legacy /apis tests
+npm run test:root
+
+# apps/api tests
+npm run test:api
+
+# type checks
+npm run typecheck:root
+```
 
 ## Provider 擴充流程
 
@@ -60,47 +102,7 @@ npm run dev:web
 - `buildRequest(input)`：將測試 payload 轉換成實際 HTTP 請求（url、method、headers、body）。
 - `normalizeResponse(response, data)`：標準化外部 API 回應格式，供前端一致顯示。
 
-### 新增一個 provider 的步驟
-
-1. 建立 `apps/api/src/providers/my-provider.js`，實作 `ApiProvider`。
-2. 在 `apps/api/src/providers/index.js` 匯入並註冊到 `providers` map。
-3. 重啟後端後，`GET /apis` 即可看到新 provider；前端列表也會同步顯示。
-
-## Dashboard demo
-
-A lightweight front-end dashboard is available at `/dashboard` with reusable visualization components:
-
-- `DataTable`
-- `StatCard`
-- `LineChart`
-- `BarChart`
-
-Collect free/paid and useful APIs related to public data.
-
 ## Data
 
 - API schema: `data/apis/schema.json`
 - Seed data: `data/apis/seed.json`
-
-## Backend
-
-Run server:
-
-```bash
-npm start
-```
-
-GET `/apis` supports query params:
-
-- `country`
-- `pricing`
-- `category`
-- `q` (full-text search in `id/name/country/organization/category/tags`)
-
-Example:
-
-```bash
-curl "http://localhost:3000/apis?country=Taiwan&pricing=free&category=weather&q=cwa"
-```
-
-Run a local static server from the repository root and open `http://localhost:8000/dashboard/`.
