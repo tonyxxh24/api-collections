@@ -1,5 +1,6 @@
 # api-collections
 
+Collect free/paid and useful api related to my interests through a modern UI.
 以 monorepo 方式管理前後端的 API 收藏與測試平台。
 
 ## 專案結構
@@ -64,3 +65,14 @@ npm run dev:web
 1. 建立 `apps/api/src/providers/my-provider.js`，實作 `ApiProvider`。
 2. 在 `apps/api/src/providers/index.js` 匯入並註冊到 `providers` map。
 3. 重啟後端後，`GET /apis` 即可看到新 provider；前端列表也會同步顯示。
+
+## Dashboard demo
+
+A lightweight front-end dashboard is available at `/dashboard` with reusable visualization components:
+
+- `DataTable`
+- `StatCard`
+- `LineChart`
+- `BarChart`
+
+Run a local static server from the repository root and open `http://localhost:8000/dashboard/`.
