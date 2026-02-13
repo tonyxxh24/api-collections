@@ -1,0 +1,11 @@
+{
+  "name": "api-collections",
+  "version": "1.0.0",
+  "description": "API collections backend",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "API Collection Item",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "country",
+    "organization",
+    "pricing",
+    "authType",
+    "baseUrl",
+    "docsUrl",
+    "category",
+    "tags",
+    "status",
+    "rateLimit",
+    "license",
+    "requestTemplates",
+    "exampleResponses",
+    "visualizationHints"
+  ],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "name": { "type": "string", "minLength": 1 },
+    "country": { "type": "string", "minLength": 2 },
+    "organization": { "type": "string", "minLength": 1 },
+    "pricing": {
+      "type": "string",
+      "enum": ["free", "paid", "hybrid"]
+    },
+    "authType": { "type": "string" },
+    "baseUrl": { "type": "string", "format": "uri" },
+    "docsUrl": { "type": "string", "format": "uri" },
+    "category": { "type": "string" },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "beta", "deprecated"]
+    },
+    "rateLimit": {
+      "type": "object",
+      "required": ["policy"],
+      "properties": {
+        "policy": { "type": "string" },
+        "notes": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "license": {
+      "type": "object",
+      "required": ["name", "url", "notes"],
+      "properties": {
+        "name": { "type": "string" },
+        "url": { "type": "string", "format": "uri" },
+        "notes": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "requestTemplates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["method", "path", "query", "header", "body"],
+        "properties": {
+          "method": { "type": "string" },
+          "path": { "type": "string" },
+          "query": {
+            "type": "object",
+            "additionalProperties": {
+              "type": ["string", "number", "boolean", "null"]
+            }
+          },
+          "header": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          },
+          "body": {
+            "type": ["object", "array", "string", "number", "boolean", "null"]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "exampleResponses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["description", "statusCode", "body"],
+        "properties": {
+          "description": { "type": "string" },
+          "statusCode": { "type": "integer", "minimum": 100, "maximum": 599 },
+          "body": {}
+        },
+        "additionalProperties": false
+      }
+    },
+    "visualizationHints": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["table", "line", "bar", "map", "card"]
+      }
+    }
+  },
+  "additionalProperties": false
+}

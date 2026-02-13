@@ -1,0 +1,196 @@
+[
+  {
+    "id": "tw-cwa-opendata",
+    "name": "Taiwan Central Weather Administration Open Data API",
+    "country": "Taiwan",
+    "organization": "Central Weather Administration",
+    "pricing": "free",
+    "authType": "API Key",
+    "baseUrl": "https://opendata.cwa.gov.tw/api/v1/rest/datastore",
+    "docsUrl": "https://opendata.cwa.gov.tw/devManual/insrtuction",
+    "category": "weather",
+    "tags": ["weather", "forecast", "taiwan", "government"],
+    "status": "active",
+    "rateLimit": {
+      "policy": "Depends on issued key tier; public keys are rate-limited by CWA.",
+      "notes": "Register an account and apply for API authorization key before production use."
+    },
+    "license": {
+      "name": "Government Open Data License, Taiwan",
+      "url": "https://data.gov.tw/license",
+      "notes": "Attribution required; follow data provider-specific reuse terms."
+    },
+    "requestTemplates": [
+      {
+        "method": "GET",
+        "path": "/F-C0032-001",
+        "query": {
+          "Authorization": "{API_KEY}",
+          "locationName": "臺北市",
+          "format": "JSON"
+        },
+        "header": {},
+        "body": null
+      }
+    ],
+    "exampleResponses": [
+      {
+        "description": "3-day weather forecast summary",
+        "statusCode": 200,
+        "body": {
+          "success": "true",
+          "records": {
+            "location": [
+              {
+                "locationName": "臺北市",
+                "weatherElement": []
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "visualizationHints": ["line", "bar", "card", "table"]
+  },
+  {
+    "id": "tw-motc-tdx",
+    "name": "Taiwan TDX Transport API",
+    "country": "Taiwan",
+    "organization": "Ministry of Transportation and Communications",
+    "pricing": "free",
+    "authType": "OAuth2 Client Credentials",
+    "baseUrl": "https://tdx.transportdata.tw/api/basic",
+    "docsUrl": "https://tdx.transportdata.tw/api-service/swagger",
+    "category": "transport",
+    "tags": ["bus", "rail", "traffic", "taiwan", "government"],
+    "status": "active",
+    "rateLimit": {
+      "policy": "Per-application quota enforced by TDX platform.",
+      "notes": "Obtain access token first; check dashboard for current quota and throttling details."
+    },
+    "license": {
+      "name": "Government Open Data License, Taiwan",
+      "url": "https://data.gov.tw/license",
+      "notes": "Commercial use allowed with attribution unless provider states additional limits."
+    },
+    "requestTemplates": [
+      {
+        "method": "GET",
+        "path": "/v2/Bus/EstimatedTimeOfArrival/City/Taipei",
+        "query": {
+          "$top": 30,
+          "$format": "JSON"
+        },
+        "header": {
+          "Authorization": "Bearer {ACCESS_TOKEN}"
+        },
+        "body": null
+      }
+    ],
+    "exampleResponses": [
+      {
+        "description": "Taipei bus ETA feed",
+        "statusCode": 200,
+        "body": [
+          {
+            "RouteName": { "Zh_tw": "262" },
+            "StopName": { "Zh_tw": "捷運科技大樓站" },
+            "EstimateTime": 180
+          }
+        ]
+      }
+    ],
+    "visualizationHints": ["map", "line", "table", "card"]
+  },
+  {
+    "id": "us-noaa-nws",
+    "name": "US NOAA National Weather Service API",
+    "country": "United States",
+    "organization": "National Oceanic and Atmospheric Administration",
+    "pricing": "free",
+    "authType": "None (User-Agent required)",
+    "baseUrl": "https://api.weather.gov",
+    "docsUrl": "https://www.weather.gov/documentation/services-web-api",
+    "category": "weather",
+    "tags": ["weather", "alerts", "united-states", "government"],
+    "status": "active",
+    "rateLimit": {
+      "policy": "No fixed published request cap; service may throttle excessive traffic.",
+      "notes": "Send a descriptive User-Agent and cache responses as recommended by NOAA."
+    },
+    "license": {
+      "name": "U.S. Public Domain (17 U.S.C. § 105)",
+      "url": "https://www.usa.gov/government-works",
+      "notes": "Most U.S. federal government works are public domain; verify third-party layers separately."
+    },
+    "requestTemplates": [
+      {
+        "method": "GET",
+        "path": "/points/39.7456,-97.0892",
+        "query": {},
+        "header": {
+          "User-Agent": "your-app-name (you@example.com)"
+        },
+        "body": null
+      }
+    ],
+    "exampleResponses": [
+      {
+        "description": "Gridpoint metadata",
+        "statusCode": 200,
+        "body": {
+          "properties": {
+            "forecast": "https://api.weather.gov/gridpoints/TOP/31,80/forecast"
+          }
+        }
+      }
+    ],
+    "visualizationHints": ["map", "line", "card", "table"]
+  },
+  {
+    "id": "us-census-data",
+    "name": "US Census Bureau Data API",
+    "country": "United States",
+    "organization": "U.S. Census Bureau",
+    "pricing": "free",
+    "authType": "API Key (optional for low volume)",
+    "baseUrl": "https://api.census.gov/data",
+    "docsUrl": "https://www.census.gov/data/developers/guidance/api-user-guide.html",
+    "category": "demographics",
+    "tags": ["population", "economy", "united-states", "government"],
+    "status": "active",
+    "rateLimit": {
+      "policy": "Without key: up to 500 requests per IP per day; with key: higher limits.",
+      "notes": "Request a key for production workloads and monitor API usage guidance updates."
+    },
+    "license": {
+      "name": "U.S. Public Domain (17 U.S.C. § 105)",
+      "url": "https://www.usa.gov/government-works",
+      "notes": "Federal datasets are generally public domain unless otherwise noted."
+    },
+    "requestTemplates": [
+      {
+        "method": "GET",
+        "path": "/2022/acs/acs5",
+        "query": {
+          "get": "NAME,B01001_001E",
+          "for": "state:*",
+          "key": "{API_KEY}"
+        },
+        "header": {},
+        "body": null
+      }
+    ],
+    "exampleResponses": [
+      {
+        "description": "State population query",
+        "statusCode": 200,
+        "body": [
+          ["NAME", "B01001_001E", "state"],
+          ["Alabama", "5028092", "01"]
+        ]
+      }
+    ],
+    "visualizationHints": ["bar", "line", "map", "table", "card"]
+  }
+]
