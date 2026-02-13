@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API Detail - Test Console</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 24px; }
+      .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+      textarea, input, select { width: 100%; margin-top: 4px; }
+      pre { background: #111; color: #eee; padding: 12px; border-radius: 8px; overflow: auto; white-space: pre-wrap; }
+      .hint { color: #b45309; }
+      .row { margin-top: 8px; }
+      .split { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+      label.pretty { display: inline-flex; align-items: center; gap: 4px; margin-top: 8px; }
+    </style>
+  </head>
+  <body>
+    <h1>API Request Builder</h1>
+    <div class="grid">
+      <section>
+        <label>API ID <input id="apiId" value="jsonplaceholder" /></label>
+        <label>Method
+          <select id="method">
+            <option>GET</option><option>POST</option><option>PUT</option><option>PATCH</option><option>DELETE</option>
+          </select>
+        </label>
+        <label>Path <input id="path" value="/posts/1" /></label>
+        <label>Query (JSON) <textarea id="query" rows="4">{}</textarea></label>
+        <label>Headers (JSON) <textarea id="headers" rows="4">{"accept":"application/json"}</textarea></label>
+        <label>Body (JSON or text) <textarea id="body" rows="6">{}</textarea></label>
+        <label class="pretty"><input id="prettyToggle" type="checkbox" checked /> JSON Pretty Print</label>
+        <div class="row"><button id="sendBtn">送出測試</button></div>
+      </section>
+      <section>
+        <h3>Response</h3>
+        <p id="summary"></p>
+        <p class="hint" id="rateHint"></p>
+        <div class="split">
+          <div>
+            <strong>Request</strong>
+            <pre id="requestOut">尚未送出</pre>
+          </div>
+          <div>
+            <strong>Response</strong>
+            <pre id="responseOut">尚未送出</pre>
+          </div>
+        </div>
+      </section>
+    </div>
+    <script type="module" src="./api-detail.js"></script>
+  </body>
+</html>
