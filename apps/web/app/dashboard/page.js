@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { fetchApis } from '../../components/api-client';
+import { DashboardPanel } from '../../components/dashboard-panel';
 
 const COUNTRY_TAGS = [
   { key: 'all', label: 'all' },
@@ -25,7 +26,6 @@ export default async function DashboardPage({ searchParams }) {
     <section className="panel content-panel">
       <h2>Dashboard</h2>
       <p>Country tag 篩選</p>
-      <span className="stat-pill">目前已註冊 API Provider：{filteredApis.length}</span>
 
       <div className="tag-row">
         {COUNTRY_TAGS.map((tag) => (
@@ -39,15 +39,7 @@ export default async function DashboardPage({ searchParams }) {
         ))}
       </div>
 
-      <div className="grid">
-        {filteredApis.map((api) => (
-          <article className="card" key={api.id}>
-            <h3>{api.name}</h3>
-            <p>ID: {api.id}</p>
-            <p>國家: {api.country}</p>
-          </article>
-        ))}
-      </div>
+      <DashboardPanel apis={filteredApis} />
     </section>
   );
 }
