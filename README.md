@@ -104,3 +104,19 @@ curl "http://localhost:3000/apis?country=Taiwan&pricing=free&category=weather&q=
 ```
 
 Run a local static server from the repository root and open `http://localhost:8000/dashboard/`.
+
+
+## 品質門檻（Minimum Quality Checks）
+
+在提交前可執行：
+
+```bash
+npm run check
+```
+
+此指令會依序執行：
+
+- `npm run lint`：語法檢查（web/api/root）。
+- `npm run typecheck`：結構型別檢查（seed metadata / API metadata / web 頁面必要檔案）。
+- `npm run test`：基本測試（API proxy 與 root `/apis` filter）。
+
