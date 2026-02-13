@@ -21,7 +21,8 @@ export function ChartPanel({ title, series, visualizationHints }) {
   const panel = document.createElement("section");
   panel.className = "card";
 
-  let selected = inferDefaultChart(visualizationHints);
+  const defaultType = inferDefaultChart(visualizationHints);
+  let selected = defaultType;
 
   const titleEl = document.createElement("h3");
   titleEl.className = "card-title";
@@ -32,7 +33,6 @@ export function ChartPanel({ title, series, visualizationHints }) {
 
   const hint = document.createElement("small");
   hint.style.color = "var(--gray-600)";
-  hint.textContent = `Auto selected: ${selected}`;
 
   const chartHost = document.createElement("div");
 
@@ -44,6 +44,8 @@ export function ChartPanel({ title, series, visualizationHints }) {
     [...toolbar.querySelectorAll("button")].forEach((button) => {
       button.classList.toggle("active", button.dataset.type === selected);
     });
+
+    hint.textContent = `Auto: ${defaultType} / Current: ${selected}`;
   }
 
   ["line", "bar"].forEach((type) => {

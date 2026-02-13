@@ -1,6 +1,11 @@
 import { DataTable } from "../components/visualization/DataTable.js";
 import { StatCard } from "../components/visualization/StatCard.js";
 import { ChartPanel } from "../components/visualization/ChartPanel.js";
+import {
+  LoadingSkeleton,
+  EmptyState,
+  ErrorState,
+} from "../components/visualization/StateView.js";
 
 const datasets = {
   taiwan: {
@@ -47,7 +52,7 @@ const datasets = {
 
 function mountDashboard() {
   const root = document.querySelector("#app");
-  root.innerHTML = '<div class="skeleton" aria-label="loading"></div>';
+  root.replaceChildren(LoadingSkeleton());
 
   setTimeout(() => {
     render(root);
@@ -71,10 +76,7 @@ function makeSection(datasetKey, heading) {
   statsWrap.className = "grid grid-2";
 
   if (!dataset.stats.length) {
-    const empty = document.createElement("div");
-    empty.className = "state-box";
-    empty.textContent = "No KPI available.";
-    statsWrap.append(empty);
+    statsWrap.append(EmptyState("No KPI available."));
   } else {
     dataset.stats.forEach((stat) => statsWrap.append(StatCard(stat)));
   }
@@ -124,10 +126,10 @@ function render(root) {
 
   const errorCard = document.createElement("section");
   errorCard.className = "card";
-  errorCard.innerHTML = `
-    <h3 class="card-title">錯誤狀態示範</h3>
-    <div class="state-box">⚠️ Unable to load remote source. Please retry later.</div>
-  `;
+  const title = document.createElement("h3");
+  title.className = "card-title";
+  title.textContent = "錯誤狀態示範";
+  errorCard.append(title, ErrorState());
 
   dashboard.append(makeSection("emptyState", "空資料狀態示範"), errorCard);
   root.append(dashboard);

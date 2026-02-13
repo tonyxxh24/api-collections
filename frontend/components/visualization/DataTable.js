@@ -1,9 +1,11 @@
+import { EmptyState } from "./StateView.js";
+
 export function DataTable({ columns, rows }) {
   const table = document.createElement("div");
   table.className = "table-wrap";
 
   if (!rows.length) {
-    table.innerHTML = '<div class="state-box">No rows to display.</div>';
+    table.append(EmptyState("No rows to display."));
     return table;
   }
 

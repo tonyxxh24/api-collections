@@ -1,3 +1,5 @@
+import { EmptyState } from "./StateView.js";
+
 function toPolylinePoints(series, width, height, padding) {
   const values = series.map((item) => item.value);
   const max = Math.max(...values, 1);
@@ -7,7 +9,10 @@ function toPolylinePoints(series, width, height, padding) {
   return series
     .map((item, index) => {
       const x = padding + index * xStep;
-      const y = height - padding - ((item.value - min) / Math.max(max - min, 1)) * (height - padding * 2);
+      const y =
+        height -
+        padding -
+        ((item.value - min) / Math.max(max - min, 1)) * (height - padding * 2);
       return `${x},${y}`;
     })
     .join(" ");
@@ -18,14 +23,17 @@ export function LineChart({ series, width = 760, height = 260 }) {
   root.className = "chart-root";
 
   if (!series.length) {
-    root.innerHTML = '<div class="state-box">No data for line chart.</div>';
+    root.append(EmptyState("No data for line chart."));
     return root;
   }
 
   const padding = 24;
   const points = toPolylinePoints(series, width, height, padding);
   const labels = series
-    .map((item, index) => `<text x="${padding + ((width - padding * 2) / Math.max(series.length - 1, 1)) * index}" y="${height - 6}" font-size="10" fill="#475569" text-anchor="middle">${item.label}</text>`)
+    .map(
+      (item, index) =>
+        `<text x="${padding + ((width - padding * 2) / Math.max(series.length - 1, 1)) * index}" y="${height - 6}" font-size="10" fill="#475569" text-anchor="middle">${item.label}</text>`,
+    )
     .join("");
 
   root.innerHTML = `

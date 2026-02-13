@@ -1,9 +1,11 @@
+import { EmptyState } from "./StateView.js";
+
 export function BarChart({ series, width = 760, height = 260 }) {
   const root = document.createElement("div");
   root.className = "chart-root";
 
   if (!series.length) {
-    root.innerHTML = '<div class="state-box">No data for bar chart.</div>';
+    root.append(EmptyState("No data for bar chart."));
     return root;
   }
 
