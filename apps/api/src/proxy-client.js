@@ -1,6 +1,7 @@
 const DEFAULT_TIMEOUT_MS = 8_000;
 const DEFAULT_RETRIES = 2;
 const DEFAULT_MAX_RESPONSE_SIZE = 1024 * 1024;
+const RETRYABLE_STATUS = new Set([429, 500, 502, 503, 504]);
 
 export function sanitizeHeaders(headers = {}) {
   const safeHeaders = { ...headers };
@@ -11,7 +12,8 @@ export function sanitizeHeaders(headers = {}) {
 }
 
 export function toTargetUrl(baseUrl, path = '/', query = {}) {
-  const url = new URL(path, baseUrl);
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  const url = new URL(normalizedPath, baseUrl);
 
   Object.entries(query || {}).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== '') {
@@ -38,6 +40,22 @@ export function mapProxyError(error) {
   return { code: 'UPSTREAM_FAILURE', message: error.message || 'Unexpected upstream error.' };
 }
 
+function shouldSendBody(method, body) {
+  return !['GET', 'HEAD'].includes(method.toUpperCase()) && body !== null && body !== undefined;
+}
+
+function toRequestBody(body) {
+  if (typeof body === 'string') {
+    return body;
+  }
+
+  return JSON.stringify(body);
+}
+
+function shouldRetryResponse(status) {
+  return RETRYABLE_STATUS.has(status);
+}
+
 async function readResponseWithLimit(response, maxSizeBytes) {
   const chunks = [];
   let total = 0;
@@ -45,11 +63,11 @@ async function readResponseWithLimit(response, maxSizeBytes) {
 
   if (!reader) {
     const fallbackBuffer = Buffer.from(await response.arrayBuffer());
-    total = fallbackBuffer.length;
+    const limited = fallbackBuffer.subarray(0, maxSizeBytes);
     return {
-      bodyText: fallbackBuffer.toString('utf8'),
-      sizeBytes: total,
-      truncated: total > maxSizeBytes
+      bodyText: limited.toString('utf8'),
+      sizeBytes: fallbackBuffer.length,
+      truncated: fallbackBuffer.length > maxSizeBytes
     };
   }
 
@@ -62,7 +80,9 @@ async function readResponseWithLimit(response, maxSizeBytes) {
     total += value.length;
 
     if (total > maxSizeBytes) {
-      chunks.push(value.subarray(0, value.length - (total - maxSizeBytes)));
+      const overflow = total - maxSizeBytes;
+      chunks.push(value.subarray(0, value.length - overflow));
+      await reader.cancel();
       return {
         bodyText: Buffer.concat(chunks).toString('utf8'),
         sizeBytes: total,
@@ -101,9 +121,14 @@ export async function requestWithRetry({
       const response = await fetch(url, {
         method,
         headers: sanitizeHeaders(headers),
-        body: body ? JSON.stringify(body) : undefined,
+        body: shouldSendBody(method, body) ? toRequestBody(body) : undefined,
         signal: controller.signal
       });
+
+      if (shouldRetryResponse(response.status) && attempt < retries) {
+        attempt += 1;
+        continue;
+      }
 
       const durationMs = Date.now() - startedAt;
       const { bodyText, sizeBytes, truncated } = await readResponseWithLimit(response, maxResponseSize);

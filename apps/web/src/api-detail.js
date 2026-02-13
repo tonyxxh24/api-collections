@@ -11,7 +11,24 @@ function parseJsonOrEmpty(text, fallback = {}) {
   }
 }
 
-function prettyJsonIfPossible(input) {
+function parseBodyInput(text) {
+  const trimmed = text.trim();
+  if (!trimmed) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(trimmed);
+  } catch {
+    return text;
+  }
+}
+
+function prettyJsonIfPossible(input, enabled = true) {
+  if (!enabled) {
+    return typeof input === 'string' ? input : JSON.stringify(input);
+  }
+
   if (typeof input !== 'string') {
     return JSON.stringify(input, null, 2);
   }
@@ -24,12 +41,13 @@ function prettyJsonIfPossible(input) {
 }
 
 async function submitTest() {
+  const prettyEnabled = document.querySelector('#prettyToggle').checked;
   const apiId = document.querySelector('#apiId').value;
   const method = document.querySelector('#method').value;
   const path = document.querySelector('#path').value;
   const query = parseJsonOrEmpty(document.querySelector('#query').value, {});
   const headers = parseJsonOrEmpty(document.querySelector('#headers').value, {});
-  const body = parseJsonOrEmpty(document.querySelector('#body').value, null);
+  const body = parseBodyInput(document.querySelector('#body').value);
 
   const response = await fetch(`http://localhost:3001/apis/${apiId}/test`, {
     method: 'POST',
@@ -41,17 +59,19 @@ async function submitTest() {
 
   const summaryEl = document.querySelector('#summary');
   const rateHintEl = document.querySelector('#rateHint');
-  const outputEl = document.querySelector('#responseOut');
+  const requestOutEl = document.querySelector('#requestOut');
+  const responseOutEl = document.querySelector('#responseOut');
 
   if (!response.ok) {
     summaryEl.textContent = `失敗：${payload.code || response.status}`;
     rateHintEl.textContent = payload.hint || payload.error || '';
-    outputEl.textContent = prettyJsonIfPossible(payload);
+    requestOutEl.textContent = prettyJsonIfPossible({ method, path, query, headers, body }, prettyEnabled);
+    responseOutEl.textContent = prettyJsonIfPossible(payload, prettyEnabled);
     return;
   }
 
   const { request, response: proxyResponse, rateLimit } = payload;
-  summaryEl.textContent = `Status ${proxyResponse.status} · ${proxyResponse.durationMs}ms · ${proxyResponse.bodySummary.bytes} bytes`;
+  summaryEl.textContent = `Status ${proxyResponse.status} · ${proxyResponse.durationMs}ms · ${proxyResponse.bodySummary.bytes} bytes · retry ${proxyResponse.retryCount}`;
 
   if (proxyResponse.bodySummary.truncated) {
     rateHintEl.textContent = '⚠️ response 超過大小限制，已截斷。';
@@ -61,13 +81,18 @@ async function submitTest() {
     rateHintEl.textContent = '';
   }
 
-  outputEl.textContent = prettyJsonIfPossible({
-    request,
-    response: {
-      ...proxyResponse,
-      body: prettyJsonIfPossible(proxyResponse.body)
-    }
-  });
+  requestOutEl.textContent = prettyJsonIfPossible(request, prettyEnabled);
+  responseOutEl.textContent = prettyJsonIfPossible(
+    {
+      status: proxyResponse.status,
+      statusText: proxyResponse.statusText,
+      durationMs: proxyResponse.durationMs,
+      headers: proxyResponse.headers,
+      bodySummary: proxyResponse.bodySummary,
+      body: prettyJsonIfPossible(proxyResponse.body, prettyEnabled)
+    },
+    prettyEnabled
+  );
 }
 
 document.querySelector('#sendBtn').addEventListener('click', () => {
