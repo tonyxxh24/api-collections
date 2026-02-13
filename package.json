@@ -1,0 +1,8 @@
+{
+  "name": "api-collections",
+  "private": true,
+  "workspaces": ["apps/*"],
+  "scripts": {
+    "test": "npm run test -w apps/api"
+  }
+}
